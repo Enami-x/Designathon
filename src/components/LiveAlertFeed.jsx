@@ -2,9 +2,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import clsx from 'clsx';
 import { formatCurrency, severityColors, severityBg } from '../utils/format.js';
 
-export default function LiveAlertFeed({ alerts, selectedId, onAlertClick, flaggedIds }) {
+export default function LiveAlertFeed({ alerts, selectedId, onAlertClick, flaggedIds, className }) {
   return (
-    <div className="card p-4 h-full flex flex-col">
+    <div
+      className={clsx(
+        'h-full flex flex-col rounded-lg border border-border-subtle bg-[#161922] p-4 overflow-hidden',
+        className
+      )}
+    >
       <div className="flex items-center justify-between mb-3">
         <div className="font-semibold text-white">Live Alerts</div>
         <div className="text-xs text-gray-500">Click to inspect</div>

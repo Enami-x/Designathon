@@ -3,7 +3,7 @@ import ForceGraph2D from 'react-force-graph-2d';
 import { mockNetworkLinks, mockNetworkNodes } from '../data/mockData.js';
 import { severityColors } from '../utils/format.js';
 
-export default function FraudNetworkGraph({ onNodeClick }) {
+export default function FraudNetworkGraph({ onNodeClick, className }) {
   const fgRef = useRef(null);
 
   const data = useMemo(
@@ -15,7 +15,9 @@ export default function FraudNetworkGraph({ onNodeClick }) {
   );
 
   return (
-    <div className="card p-4 h-full flex flex-col">
+    <div
+      className={`h-full flex flex-col rounded-lg border border-border-subtle bg-[#161922] p-4 overflow-hidden ${className || ''}`}
+    >
       <div className="flex items-center justify-between mb-2">
         <div className="font-semibold text-white">Network Graph</div>
         <div className="text-xs text-gray-500">Click red/amber nodes</div>

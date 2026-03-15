@@ -1,39 +1,42 @@
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Cell } from 'recharts';
-import { mockRiskDistribution } from '../data/mockData.js';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell } from 'recharts';
 
-const barColors = {
-  '0-25': '#14B8A6',
-  '25-50': '#14B8A6',
-  '50-75': '#F59E0B',
-  '75-100': '#EF4444'
-};
+const data = [
+  { bucket: '0-25',   count: 6200 },
+  { bucket: '25-50',  count: 1800 },
+  { bucket: '50-75',  count: 280  },
+  { bucket: '75-100', count: 130  },
+];
 
-const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="card p-2 text-xs">
-        <div className="font-semibold text-white">{label}</div>
-        <div className="text-gray-300">Count: {payload[0].value}</div>
-      </div>
-    );
-  }
-  return null;
+const getColor = (bucket) => {
+  if (bucket === '0-25' || bucket === '25-50') return '#14B8A6';
+  if (bucket === '50-75') return '#F59E0B';
+  return '#EF4444';
 };
 
 export default function RiskScoreChart() {
   return (
-    <div className="card p-4 h-full">
-      <div className="font-semibold mb-3 text-white">Risk Distribution</div>
-      <div className="h-64">
+    <div className="w-full h-full flex flex-col" style={{ background: '#161922', borderRadius: 8, padding: 16 }}>
+      <p style={{ color: '#6B7280', fontSize: 11, textTransform: 'uppercase', marginBottom: 12 }}>
+        Risk Score Distribution
+      </p>
+      <div style={{ flex: 1, minHeight: 0 }}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={mockRiskDistribution} margin={{ top: 8, right: 12, left: 0, bottom: 8 }}>
-            <CartesianGrid stroke="#1E2235" strokeDasharray="3 3" />
-            <XAxis dataKey="bucket" tick={{ fill: '#9ca3af', fontSize: 12 }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fill: '#9ca3af', fontSize: 12 }} axisLine={false} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: '#1E2235' }} />
-            <Bar dataKey="count" radius={[6, 6, 0, 0]}>
-              {mockRiskDistribution.map((entry) => (
-                <Cell key={entry.bucket} fill={barColors[entry.bucket]} />
+          <BarChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#1E2235" vertical={false} />
+            <XAxis
+              dataKey="bucket"
+              tick={{ fill: '#6B7280', fontSize: 12 }}
+              axisLine={false}
+              tickLine={false}
+            />
+            <YAxis
+              tick={{ fill: '#6B7280', fontSize: 12 }}
+              axisLine={false}
+              tickLine={false}
+            />
+            <Bar dataKey="count" radius={[4, 4, 0, 0]} maxBarSize={60}>
+              {data.map((entry) => (
+                <Cell key={entry.bucket} fill={getColor(entry.bucket)} />
               ))}
             </Bar>
           </BarChart>

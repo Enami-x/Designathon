@@ -1,13 +1,12 @@
 import { useMemo, useState } from 'react';
 import Navbar from './components/Navbar.jsx';
-import MetricTile from './components/MetricTile.jsx';
-import LiveAlertFeed from './components/LiveAlertFeed.jsx';
-import RiskScoreChart from './components/RiskScoreChart.jsx';
-import ShapPanel from './components/ShapPanel.jsx';
-import FraudNetworkGraph from './components/FraudNetworkGraph.jsx';
 import TransactionDrawer from './components/TransactionDrawer.jsx';
 import TrendChart from './components/TrendChart.jsx';
 import BaselineChart from './components/BaselineChart.jsx';
+import RiskScoreChart from './components/RiskScoreChart.jsx';
+import FraudNetworkGraph from './components/FraudNetworkGraph.jsx';
+import MetricTile from './components/MetricTile.jsx';
+import AnalystView from './pages/AnalystView.jsx';
 import { mockAlerts, mockMetrics } from './data/mockData.js';
 import { formatCurrency } from './utils/format.js';
 
@@ -73,44 +72,30 @@ export default function App() {
     <div className="min-h-screen bg-fraud-bg text-white">
       <Navbar activeView={activeView} onChangeView={setActiveView} />
 
-      <main className="p-4 md:p-6 space-y-4 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
-          {metrics.map((m) => (
-            <MetricTile key={m.label} label={m.label} value={m.value} color={m.color} />
-          ))}
-        </div>
-
-        {activeView === 'analyst' ? (
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-            <div className="space-y-4">
-              <LiveAlertFeed
-                alerts={alertFeed}
-                selectedId={selectedAlert?.id}
-                onAlertClick={handleAlertClick}
-                flaggedIds={flaggedIds}
-              />
-              <RiskScoreChart />
-            </div>
-
-            <div className="space-y-4">
-              <ShapPanel transactionId={selectedAlert?.id || '—'} />
-              <TrendChart />
-            </div>
-
-            <div className="space-y-4">
-              <FraudNetworkGraph onNodeClick={handleNodeClick} />
-              <BaselineChart />
-            </div>
+      {activeView === 'analyst' ? (
+        <AnalystView
+          metrics={metrics}
+          alerts={alertFeed}
+          selectedAlert={selectedAlert}
+          onAlertClick={handleAlertClick}
+          flaggedIds={flaggedIds}
+          onNodeClick={handleNodeClick}
+        />
+      ) : (
+        <main className="p-4 md:p-6 space-y-4 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+            {metrics.map((m) => (
+              <MetricTile key={m.label} label={m.label} value={m.value} color={m.color} />
+            ))}
           </div>
-        ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <TrendChart />
             <BaselineChart />
             <RiskScoreChart />
             <FraudNetworkGraph onNodeClick={handleNodeClick} />
           </div>
-        )}
-      </main>
+        </main>
+      )}
 
       <TransactionDrawer
         open={drawerOpen}
